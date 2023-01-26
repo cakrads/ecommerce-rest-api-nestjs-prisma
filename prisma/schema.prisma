@@ -6,6 +6,49 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Product {
+  id          Int        @id @unique @default(autoincrement())
+  title       String
+  subtitle    String?
+  slug        String     @unique
+  context     String
+  description String?
+  image       String[]
+  price       Price[]
+  categories  Category[]
+  brands      Brand[]
+  source      String?
+  published   Boolean?   @default(true)
+}
+
+model Price {
+  id           Int     @id @unique @default(autoincrement())
+  currency     String
+  currentPrice Int
+  fullPrice    Int
+  discount     Int
+  product      Product @relation(fields: [productId], references: [id])
+  productId    Int
+}
+
+model Category {
+  id          Int       @id @unique @default(autoincrement())
+  title       String
+  description String?
+  slug        String    @unique
+  product     Product[]
+}
+
+model Brand {
+  id          Int       @id @unique @default(autoincrement())
+  title       String
+  description String?
+  slug        String    @unique
+  image       String
+  Product     Product[]
 }
