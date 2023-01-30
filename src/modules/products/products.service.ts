@@ -36,7 +36,9 @@ export class ProductsService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(productWhereUniqueInput: Prisma.ProductWhereUniqueInput) {
+    return this.prisma.product.delete({
+      where: productWhereUniqueInput,
+    });
   }
 }
