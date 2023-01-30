@@ -11,6 +11,8 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+import type { Product as ProductModel, Prisma } from '@prisma/client';
+
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
@@ -25,9 +27,15 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @Get(':slugOrId')
+  async findOneBySlug(
+    @Param('slugOrId') slugOrId: string,
+  ): Promise<ProductModel> {
+    const param: Prisma.ProductWhereUniqueInput = Number.isInteger(+slugOrId)
+      ? { id: +slugOrId }
+      : { slug: slugOrId };
+
+    return this.productsService.findOne(param);
   }
 
   @Patch(':id')

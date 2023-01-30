@@ -4,9 +4,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
+import type { Prisma, Product } from '@prisma/client';
+
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   create(createProductDto: CreateProductDto) {
     return `This action adds a new product ${JSON.stringify(createProductDto)}`;
@@ -16,8 +18,12 @@ export class ProductsService {
     return this.prisma.product.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(
+    productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
+  ): Promise<Product | null> {
+    return this.prisma.product.findUnique({
+      where: productWhereUniqueInput,
+    });
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
