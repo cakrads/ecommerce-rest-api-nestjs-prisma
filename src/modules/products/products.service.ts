@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateProductDto } from './dto/update-product.dto';
 
 import type { Prisma, Product } from '@prisma/client';
 
@@ -9,13 +8,13 @@ import type { Prisma, Product } from '@prisma/client';
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: Prisma.ProductCreateInput) {
+  async create(data: Prisma.ProductCreateInput): Promise<Product | null> {
     return this.prisma.product.create({
       data,
     });
   }
 
-  findAll() {
+  async findAll(): Promise<Product[]> {
     return this.prisma.product.findMany();
   }
 
@@ -27,10 +26,14 @@ export class ProductsService {
     });
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product. ${JSON.stringify(
-      updateProductDto,
-    )}`;
+  async update(
+    id: number,
+    data: Prisma.ProductUpdateInput,
+  ): Promise<Product | null> {
+    return this.prisma.product.update({
+      where: { id },
+      data,
+    });
   }
 
   remove(id: number) {
