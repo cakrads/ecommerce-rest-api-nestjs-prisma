@@ -13,6 +13,10 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 import type { Product as ProductModel, Prisma } from '@prisma/client';
 
+@Controller({
+  path: 'products',
+  version: '1',
+})
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
