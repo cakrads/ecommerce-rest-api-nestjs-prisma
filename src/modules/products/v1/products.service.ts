@@ -15,7 +15,13 @@ export class ProductsService {
   }
 
   async findAll(): Promise<Product[]> {
-    return this.prisma.product.findMany();
+    return this.prisma.product.findMany({
+      include: {
+        brands: true,
+        categories: true,
+        price: true,
+      },
+    });
   }
 
   async findOne(
@@ -23,6 +29,11 @@ export class ProductsService {
   ): Promise<Product | null> {
     return this.prisma.product.findUnique({
       where: productWhereUniqueInput,
+      include: {
+        brands: true,
+        categories: true,
+        price: true,
+      },
     });
   }
 
